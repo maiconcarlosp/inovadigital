@@ -95,6 +95,128 @@ estes três, todos manuais e gratuitos:
 WhatsApp é o único canal de contato, esse cartão é a primeira impressão de boa
 parte das conversas. Se o texto ou os serviços mudarem, vale regerar a imagem.
 
+## DNS do domínio
+
+Registros atuais no Registro.br, todos corretos:
+
+| Tipo | Nome | Valor |
+|---|---|---|
+| A | inovadigital.com.br | 185.199.108.153 |
+| A | inovadigital.com.br | 185.199.109.153 |
+| A | inovadigital.com.br | 185.199.110.153 |
+| A | inovadigital.com.br | 185.199.111.153 |
+| CNAME | www.inovadigital.com.br | maiconcarlosp.github.io. |
+
+**Sim, os quatro registros A são necessários.** São os quatro endereços que o
+GitHub publica para o Pages, e não são servidores diferentes com conteúdos
+diferentes: são quatro pontos de entrada da mesma rede. Com os quatro no ar, se
+um ficar indisponível o navegador tenta o seguinte sozinho. Com apenas um,
+funcionaria na maior parte do tempo, mas uma falha naquele endereço específico
+derrubaria o site sem necessidade. É a configuração que o GitHub documenta e a
+única que ele dá suporte.
+
+Opcional: o GitHub também publica endereços IPv6 (`2606:50c0:8000::153` até
+`:8003::153`, registros do tipo AAAA). Não são obrigatórios — a ausência deles
+não quebra nada para ninguém hoje.
+
+## Passo a passo: corrigir o HTTPS do www
+
+Sintoma: `https://inovadigital.com.br` funciona, `https://www.inovadigital.com.br`
+falha na conexão. O DNS está certo; o que falta é o certificado, emitido apenas
+para o domínio raiz.
+
+Isso acontece quando o domínio customizado foi salvo no GitHub Pages **antes** de
+o registro CNAME do `www` existir. O certificado foi emitido naquele momento e não
+é reemitido sozinho.
+
+1. Abra `https://github.com/maiconcarlosp/inovadigital/settings/pages`.
+2. Em **Custom domain**, apague o conteúdo do campo e clique em **Save**.
+   O site sai do ar por alguns minutos — é esperado.
+3. Digite `inovadigital.com.br` no mesmo campo e clique em **Save** de novo.
+4. O GitHub mostra "DNS check in progress". Aguarde virar o check verde.
+5. Quando a caixa **Enforce HTTPS** deixar de estar acinzentada, marque-a.
+   Ela fica bloqueada enquanto o certificado não terminou de ser emitido —
+   pode levar de alguns minutos a uma hora.
+6. Confira: `https://www.inovadigital.com.br` deve abrir e redirecionar para o
+   endereço sem `www`.
+
+Pela linha de comando, a verificação é esta — deve listar os dois nomes:
+
+```bash
+echo | openssl s_client -connect inovadigital.com.br:443   -servername inovadigital.com.br 2>/dev/null   | openssl x509 -noout -text | grep -A2 "Subject Alternative Name"
+```
+
+Não apague o arquivo `CNAME` do repositório durante o processo: o GitHub o
+reescreve sozinho ao salvar o domínio, e é ele que mantém a configuração.
+
+## Passo a passo: ser encontrado
+
+Na ordem de retorno. Os três primeiros são gratuitos e feitos uma única vez.
+
+### 1. Perfil da Empresa no Google
+
+É o maior ganho isolado. É o que coloca a Inova Digital no mapa e nas buscas do
+tipo "integração de sistemas Caxias do Sul", acima dos resultados normais.
+
+1. Acesse `https://business.google.com` e entre com a conta Google da empresa.
+2. Crie o perfil com o nome exato **Inova Digital** — igual ao do site.
+3. Categoria principal: **Serviço de desenvolvimento de software**. Adicione
+   como secundárias "Consultor de TI" e "Serviço de automação industrial".
+4. Endereço: se atende no seu endereço, pode ocultá-lo e marcar como **área de
+   atendimento**, informando Caxias do Sul e região. Perfil sem endereço visível
+   é permitido para quem atende no cliente.
+5. Telefone: o mesmo número do WhatsApp. Site: `https://inovadigital.com.br`.
+6. O Google pede **verificação** — por vídeo, cartão postal ou telefone,
+   conforme o caso. É a etapa que leva dias; sem ela o perfil não aparece.
+7. Depois de verificado, preencha serviços e horário, e publique fotos reais.
+
+Mantenha nome, telefone e site **idênticos** aos do site. Divergência entre eles
+enfraquece o reconhecimento da empresa pelo Google.
+
+### 2. Google Search Console
+
+Mostra por quais termos as pessoas chegam e avisa se algo quebrar.
+
+1. Acesse `https://search.google.com/search-console` e escolha **Prefixo do
+   URL**, com `https://inovadigital.com.br/`.
+2. Escolha verificar por **tag HTML**. O Google mostra uma linha assim:
+   `<meta name="google-site-verification" content="...">`.
+3. Me mande essa linha que eu a coloco no `index.html` e publico; depois é só
+   clicar em "Verificar". (Alternativa sem código: verificar por DNS, criando um
+   registro TXT no Registro.br com o valor que o Google fornecer.)
+4. Verificado, vá em **Sitemaps** e envie `sitemap.xml`.
+5. Em **Inspeção de URL**, cole a home e clique em "Solicitar indexação".
+
+Os dados levam alguns dias para aparecer. Não é sinal de problema.
+
+### 3. Bing Webmaster Tools
+
+Vale por si e porque alimenta o Copilot e parte das buscas com IA.
+
+1. Acesse `https://www.bing.com/webmasters`.
+2. Use **Importar do Google Search Console** — leva a verificação junto e
+   dispensa refazer tudo. Se preferir não conectar, a verificação por tag HTML
+   funciona igual à do Google e eu coloco a tag para você.
+3. Envie o `sitemap.xml`.
+
+A chave do IndexNow já está publicada no site e o workflow já avisa a cada
+publicação; nada a fazer aqui além do cadastro.
+
+### 4. Link do site no LinkedIn
+
+Links de fora são o que mais pesa depois do conteúdo, e este é o mais fácil.
+
+1. No seu perfil, **Editar apresentação** → campo **Site** → `https://inovadigital.com.br`.
+2. Vale mais do que parece: crie também uma **Página da empresa** no LinkedIn
+   para a Inova Digital, com o site no campo próprio. É um segundo link, de um
+   domínio com muita autoridade, e aparece nas buscas pelo nome da empresa.
+3. Ao publicar sobre um projeto, cole o endereço do site no texto — agora o
+   cartão de compartilhamento aparece com logo e descrição.
+
+Outros links que costumam valer o esforço: cadastro de fornecedor nos clientes
+que já atende, associações comerciais e industriais da região, e o perfil no
+GitHub.
+
 ## Checklist de SEO depois de publicar
 
 - [ ] Cadastrar o site no [Google Search Console](https://search.google.com/search-console) e enviar o `sitemap.xml`
