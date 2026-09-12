@@ -1,0 +1,75 @@
+name: Avisar buscadores (IndexNow)
+
+# Sempre que a home mudar, avisa o IndexNow que o conteudo foi atualizado.
+# O Bing usa esse protocolo (e com ele o Copilot e parte das buscas com IA),
+# junto de Yandex, Seznam e Naver. O Google NAO usa IndexNow: ele relê o
+# sitemap por conta propria, entao nao ha nada a disparar para ele aqui.
+#
+# Avisar nao garante indexacao nem posicao: e apenas um aviso de que a
+# pagina mudou, que encurta o tempo ate o rastreador voltar.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'styles.css'
+      - 'llms.txt'
+      - 'sitemap.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  avisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Descobrir a chave publicada no repositorio
+        id: chave
+        run: |
+          arquivo=$(ls -1 [0-9a-f]*.txt 2>/dev/null | head -n1)
+          if [ -z "$arquivo" ]; then
+            echo "Nenhum arquivo de chave do IndexNow encontrado na raiz." >&2
+            exit 1
+          fi
+          echo "valor=$(cat "$arquivo")" >> "$GITHUB_OUTPUT"
+          echo "arquivo=$arquivo" >> "$GITHUB_OUTPUT"
+
+      - name: Esperar o GitHub Pages publicar a chave
+        run: |
+          url="https://inovadigital.com.br/${{ steps.chave.outputs.arquivo }}"
+          for i in $(seq 1 20); do
+            if [ "$(curl -s -o /dev/null -w '%{http_code}' -L "$url")" = "200" ]; then
+              echo "Chave acessivel em $url"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "A chave nao ficou acessivel em $url; o IndexNow recusaria o aviso." >&2
+          exit 1
+
+      - name: Enviar o aviso
+        run: |
+          resposta=$(curl -s -o /tmp/corpo -w '%{http_code}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                  "host": "inovadigital.com.br",
+                  "key": "${{ steps.chave.outputs.valor }}",
+                  "keyLocation": "https://inovadigital.com.br/${{ steps.chave.outputs.arquivo }}",
+                  "urlList": ["https://inovadigital.com.br/"]
+                }' \
+            https://api.indexnow.org/IndexNow)
+          echo "HTTP $resposta"
+          cat /tmp/corpo || true
+          # 200 = aceito, 202 = aceito e a chave sera validada depois.
+          case "$resposta" in
+            200|202) echo "Aviso aceito." ;;
+            *) echo "IndexNow respondeu $resposta." >&2; exit 1 ;;
+          esac

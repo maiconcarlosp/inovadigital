@@ -13,10 +13,12 @@ Tema: desenvolvimento de sistemas web integrados a hardware físico, com foco em
 | `index.html` | Conteúdo da página, script de ano e JSON-LD de SEO |
 | `styles.css` | Layout responsivo e identidade visual em azul-marinho e turquesa |
 | `Imagens/` | Fontes da marca em SVG e PNG, com nomes descritivos (`inova-digital-*`) |
-| `assets/` | Versões WebP dos logos, com compressão sem perda visual, usadas na página e favicon |
+| `assets/` | Versões WebP dos logos usadas na página e no favicon, mais `og-inova-digital.png`, o cartão de compartilhamento |
+| `.github/workflows/indexnow.yml` | A cada publicação, avisa o IndexNow (Bing e afins) que a home mudou |
+| `<32 hex>.txt` na raiz | Chave do IndexNow — o nome do arquivo **é** a chave; não renomeie nem apague |
 | `llms.txt` | Resumo complementar do negócio; não substitui o HTML nem garante citações por IA |
 | `robots.txt` | Mantém o acesso permitido aos crawlers, inclusive agentes de busca e treinamento |
-| `sitemap.xml` | Sitemap — atualize o `<lastmod>` a cada mudança relevante |
+| `sitemap.xml` | Sitemap — atualize o `<lastmod>` a cada mudança relevante (ainda é manual) |
 | `CNAME` | Diz ao GitHub Pages qual domínio customizado usar — **não apague** |
 | `favicon.svg` | Ícone anterior; o site agora usa o símbolo da marca em `assets/` |
 | `404.html` | Exibe uma página de erro com link para a home, sem redirecionamento automático |
@@ -66,6 +68,32 @@ git push
 Confira o resultado do workflow do GitHub Pages; o tempo de publicação pode variar.
 Antes do commit, revise `git diff` e selecione os arquivos desejados para evitar incluir
 alterações de outros trabalhos. Esta revisão não fez commit, push ou publicação.
+
+## Ser encontrado: o que é automático e o que não é
+
+**Automático.** O workflow `indexnow.yml` dispara a cada push que toque a home e
+avisa o IndexNow de que a página mudou. Isso encurta o tempo até o Bing rastrear
+de novo — e, com ele, o Copilot e parte das buscas com IA. O Google não usa
+IndexNow; ele relê o `sitemap.xml` sozinho. Avisar não garante indexação,
+posição nem citação.
+
+**Não automatizável, e é onde está o maior ganho.** Nenhuma automação substitui
+estes três, todos manuais e gratuitos:
+
+1. **Perfil da Empresa no Google.** É o que faz a Inova Digital aparecer nas
+   buscas por "integração de sistemas Caxias do Sul" e no mapa. Exige
+   verificação da empresa pelo Google e não tem API que crie o perfil.
+2. **Verificar o domínio no Search Console e no Bing Webmaster Tools.** Uma vez
+   só. Depois disso o sitemap passa a ser relido sozinho, e você enxerga por
+   quais termos as pessoas chegam.
+3. **Links de fora apontando para o site.** O link no perfil do LinkedIn, em
+   cadastros de fornecedor e em associações comerciais da região valem mais do
+   que qualquer ajuste técnico nesta página.
+
+**O que aumenta o clique quando o link é compartilhado.** `og-inova-digital.png`
+é o cartão que WhatsApp, LinkedIn e Telegram exibem ao colar o endereço. Como o
+WhatsApp é o único canal de contato, esse cartão é a primeira impressão de boa
+parte das conversas. Se o texto ou os serviços mudarem, vale regerar a imagem.
 
 ## Checklist de SEO depois de publicar
 
