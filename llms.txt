@@ -19,9 +19,9 @@
 - **Integração de hardware, IoT e automação**: comunicação com CLPs, sensores,
   controladores, coletores, leitores e terminais de autoatendimento, por serial
   RS-232/RS-485, Modbus, MQTT, TCP/IP e protocolos proprietários de fabricante.
-- **Meios de pagamento e rotinas fiscais**: TEF, pinpads e PIX integrados ao
-  ponto de venda e ao autoatendimento, incluindo confirmação, cancelamento e
-  conciliação.
+- **Meios de pagamento e emissão fiscal**: emissão de NF-e e NFC-e integrada ao
+  sistema de venda, além de TEF, pinpads e PIX no ponto de venda e no
+  autoatendimento, incluindo confirmação, cancelamento e conciliação.
 - **Desenvolvimento web e mobile sob medida**: plataformas de gestão de vendas,
   painéis de acompanhamento de máquinas em tempo real e aplicativos móveis.
 

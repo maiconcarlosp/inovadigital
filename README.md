@@ -12,7 +12,7 @@ Tema: desenvolvimento de sistemas web integrados a hardware físico, com foco em
 |---|---|
 | `index.html` | Conteúdo da página, script de ano e JSON-LD de SEO |
 | `styles.css` | Layout responsivo e identidade visual em azul-marinho e turquesa |
-| `Imagens/` | Logos originais fornecidos pelo cliente, preservados |
+| `Imagens/` | Fontes da marca em SVG e PNG, com nomes descritivos (`inova-digital-*`) |
 | `assets/` | Versões WebP dos logos, com compressão sem perda visual, usadas na página e favicon |
 | `llms.txt` | Resumo complementar do negócio; não substitui o HTML nem garante citações por IA |
 | `robots.txt` | Mantém o acesso permitido aos crawlers, inclusive agentes de busca e treinamento |

@@ -36,7 +36,7 @@ As alterações locais anteriores foram preservadas. Não foi feito commit, push
 3. **Fortalecer evidências reais.** Acrescentar imagens autorizadas do terminal e da plataforma do projeto apresentado. Se disponíveis, informar problema, participação da Inova Digital e resultados verificáveis; não inventar números, clientes ou depoimentos.
 4. **Criar imagem de compartilhamento.** Falta uma imagem social em formato raster, com URL absoluta em `og:image`, dimensões e texto alternativo. É uma melhoria de apresentação em links compartilhados, não uma garantia de ranking.
 5. **Aprofundar serviços conforme houver material.** Páginas próprias sobre integração de ERP, equipamentos industriais e TEF podem atender buscas específicas quando tiverem conteúdo original suficiente. Evitar páginas quase idênticas por cidade ou palavra-chave.
-6. **Conferir a oferta comercial.** O serviço menciona “rotinas fiscais”, mas a descrição detalha pagamentos. Especificar quais rotinas fiscais são realmente atendidas ou ajustar o nome após confirmação comercial.
+6. ~~**Conferir a oferta comercial.**~~ **Resolvido.** O responsável confirmou que faz integração de NF-e e NFC-e. O serviço passou a se chamar "Pagamentos e emissão fiscal", com NF-e e NFC-e no texto visível, no `hasOfferCatalog`, no `knowsAbout` e no `llms.txt`.
 
 ## Buscadores com IA
 
